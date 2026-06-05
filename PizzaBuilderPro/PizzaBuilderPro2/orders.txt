@@ -1,0 +1,42 @@
+Order ID: 788
+Size: Small
+Crust: Regular
+Toppings: Cheese
+Quantity: 1
+Total: 5.75
+---
+Order ID: 790
+Size: Medium
+Crust: Regular
+Toppings: Cheese
+Quantity: 1
+Total: 8.75
+---
+Order ID: 1180
+Size: Small
+Crust: Regular
+Toppings: Cheese
+Quantity: 1
+Total: 5.75
+---
+Order ID: 1876
+Size: Small
+Crust: Regular
+Toppings: Cheese, Pepperoni, Peppers, Pineapple, Ham
+Quantity: 1
+Total: 7.875
+---
+Order ID: 871
+Size: Large
+Crust: Regular
+Toppings: Cheese, Pepperoni, Bacon, Ham, Chicken
+Quantity: 1
+Total: 12.375
+---
+Order ID: 1437
+Size: Large
+Crust: Regular
+Toppings: Cheese, Pepperoni
+Quantity: 1
+Total: 11.5
+---
