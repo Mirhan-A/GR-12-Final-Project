@@ -7,12 +7,15 @@ class Pizza {
     private String size;
     private String crust;
     private java.util.ArrayList<String> toppings;
+    private java.util.ArrayList<Drinks> drinks;
     private int quantity;
 
-    public Pizza(String size, String crust, java.util.ArrayList<String> toppings, int quantity) {
+    public Pizza(String size, String crust, java.util.ArrayList<String> toppings,java.util.ArrayList<Drinks> drinks,
+            int quantity) {
         this.size = size;
         this.crust = crust;
         this.toppings = toppings;
+        this.drinks = drinks;
         this.quantity = quantity;
     }
 
@@ -20,12 +23,14 @@ class Pizza {
     public String getSize() { return size; }
     public String getCrust() { return crust; }
     public java.util.ArrayList<String> getToppings() { return toppings; }
+    public java.util.ArrayList<Drinks> getDrinks() { return drinks; }
     public int getQuantity() { return quantity; }
 
     // Setters (used for editing)
     public void setSize(String s) { size = s; }
     public void setCrust(String c) { crust = c; }
     public void setToppings(java.util.ArrayList<String> t) { toppings = t; }
+    public void setDrinks(java.util.ArrayList<Drinks> d ) {drinks = d;}
     public void setQuantity(int q) { quantity = q; }
 
     // Polymorphism: can be overridden
@@ -39,6 +44,7 @@ class Pizza {
         if (crust.equals("Deep Dish")) price += 2;
 
         price += toppings.size() * 1.5;
+        price += drinks.size() * 2.00; 
 
         return price * quantity;
     }
@@ -63,8 +69,8 @@ class Pizza {
 // CUSTOM PIZZA (Inheritance + Polymorphism)
 // ===============================
 class CustomPizza extends Pizza {
-    public CustomPizza(String size, String crust, java.util.ArrayList<String> toppings, int quantity) {
-        super(size, crust, toppings, quantity);
+    public CustomPizza(String size, String crust, java.util.ArrayList<String> toppings, java.util.ArrayList<Drinks> drinks, int quantity) {
+        super(size, crust, toppings, drinks, quantity);
     }
 
     @Override

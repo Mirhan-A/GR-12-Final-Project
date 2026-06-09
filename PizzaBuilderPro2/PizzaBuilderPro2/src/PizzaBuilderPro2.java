@@ -12,13 +12,15 @@ import java.util.*;
 class Pizza {
     private String size, crust, date;
     private ArrayList<String> toppings;
+    private ArrayList<String> drinks;
     private int quantity;
     private int orderId;
 
-    public Pizza(String size, String crust, ArrayList<String> toppings, int quantity, int orderId, String date) {
+    public Pizza(String size, String crust, ArrayList<String> toppings, ArrayList<String> drinks, int quantity, int orderId, String date) {
         this.size = size;
         this.crust = crust;
         this.toppings = toppings;
+        this.drinks = drinks; 
         this.quantity = quantity;
         this.orderId = orderId;
         this.date = date;
@@ -27,6 +29,7 @@ class Pizza {
     public String getSize() { return size; }
     public String getCrust() { return crust; }
     public ArrayList<String> getToppings() { return toppings; }
+    public ArrayList<String> getDrinks() {return drinks; }
     public int getQuantity() { return quantity; }
     public int getOrderId() { return orderId; }
     public String getDate() { return date; }
@@ -34,6 +37,7 @@ class Pizza {
     public void setSize(String s) { size = s; }
     public void setCrust(String c) { crust = c; }
     public void setToppings(ArrayList<String> t) { toppings = t; }
+    public void setDrinks(ArrayList<String> d) {drinks = d; }
     public void setQuantity(int q) { quantity = q; }
     public void setDate(String d) { date = d; }
 
@@ -52,8 +56,8 @@ class Pizza {
 // CUSTOM PIZZA (OOP: inheritance + polymorphism)
 // ---------------------------
 class CustomPizza extends Pizza {
-    public CustomPizza(String size, String crust, ArrayList<String> toppings, int quantity, int orderId, String date) {
-        super(size, crust, toppings, quantity, orderId, date);
+    public CustomPizza(String size, String crust, ArrayList<String> toppings, ArrayList<String> drinks, int quantity, int orderId, String date) {
+        super(size, crust, toppings, drinks, quantity, orderId, date);
     }
 
     @Override
@@ -348,6 +352,7 @@ public class PizzaBuilderPro2 extends JFrame {
                 writer.println("Size: " + p.getSize());
                 writer.println("Crust: " + p.getCrust());
                 writer.println("Toppings: " + String.join(", ", p.getToppings()));
+                writer.println("Drinks: " + String.join(",", p.getDrinks()));
                 writer.println("Quantity: " + p.getQuantity());
                 writer.println("Date: " + p.getDate());
                 writer.println("Total: " + p.calculatePrice());
@@ -393,14 +398,20 @@ public class PizzaBuilderPro2 extends JFrame {
                     ArrayList<String> toppings = new ArrayList<>();
                     if (!toppingsLine.isEmpty())
                         toppings.addAll(Arrays.asList(toppingsLine.split(", ")));
-
+                    
+                    String drinksLine = reader.readLine().substring(8).trim(); 
+                    ArrayList<String> drinks = new ArrayList<>(); 
+                    
+                    if(!drinksLine.isEmpty())
+                        drinks.addAll(Arrays.asList(drinksLine.split(", ")));
+                        
                     int quantity = Integer.parseInt(reader.readLine().substring(10).trim());
                     String date = reader.readLine().substring(6).trim();
 
                     reader.readLine(); // skip total
                     reader.readLine(); // skip ---
 
-                    manager.addOrder(new CustomPizza(size, crust, toppings, quantity, id, date));
+                    manager.addOrder(new CustomPizza(size, crust, toppings, drinks, quantity, id, date));
                 }
             }
 
@@ -496,6 +507,9 @@ public class PizzaBuilderPro2 extends JFrame {
             "Peppers","Pineapple","Sausage","Ham","Tomatoes","Spinach",
             "Jalapenos","Chicken","Ground Beef"
         };
+        String[] drinkOptions = {"Pepsi", "Coca-Cola", "7-up", "Sprite",
+            "Diet Pepsi", "Diet Coca-Cola"
+        };
 
         JComboBox<String> sizeBox = new JComboBox<>(sizes);
         JComboBox<String> crustBox = new JComboBox<>(crusts);
@@ -586,7 +600,29 @@ public class PizzaBuilderPro2 extends JFrame {
         scroll.setPreferredSize(new Dimension(380,180));
         form.add(new JLabel("Toppings:"));
         form.add(scroll);
-
+        
+        JPanel drinksPanel = new JPanel(new GridLayout(0,2,5,5)); 
+        
+        JCheckBox[] drinkChecks = new JCheckBox[drinkOptions.length];
+        
+        for(int i = 0 ; i < drinkOptions.length; i++) 
+        {
+            drinkChecks[i] = new JCheckBox(drinkOptions[i]); 
+            
+            if (isEdit && editing.getDrinks().contains(drinkOptions[i])) 
+            {
+                drinkChecks[i].setSelected(true);
+            }
+            
+            drinksPanel.add(drinkChecks[i]);
+        }
+        
+        JScrollPane drinkScroll = new JScrollPane(drinksPanel);
+        drinkScroll.setPreferredSize(new Dimension(380,100));
+        
+        form.add(new JLabel("Drinks:")); 
+        form.add(drinkScroll);
+        
         JLabel priceLabel = new JLabel("Price: $0.00");
         priceLabel.setFont(new Font("Arial", Font.BOLD, 18));
         form.add(priceLabel);
@@ -601,8 +637,11 @@ public class PizzaBuilderPro2 extends JFrame {
 
             int toppingCount = 0;
             for (JCheckBox cb : checks) if (cb.isSelected()) toppingCount++;
+            
+            int drinkCount = 0;
+            for (JCheckBox cb : drinkChecks) if (cb.isSelected()) drinkCount++;
 
-            double subtotal = sizePrice + crustPrice + (toppingCount * 0.75);
+            double subtotal = sizePrice + crustPrice + (toppingCount * 0.75) + (drinkCount * 2.00);
             if (toppingCount >= 5) subtotal *= 0.9;
 
             double total = subtotal * (int) qtySpinner.getValue();
@@ -613,6 +652,7 @@ public class PizzaBuilderPro2 extends JFrame {
         crustBox.addActionListener(e -> updatePrice.run());
         qtySpinner.addChangeListener(e -> updatePrice.run());
         for (JCheckBox cb : checks) cb.addActionListener(e -> updatePrice.run());
+        for (JCheckBox cb : drinkChecks) cb.addActionListener (e -> updatePrice.run());
         updatePrice.run();
 
         JPanel buttons = new JPanel();
@@ -623,6 +663,9 @@ public class PizzaBuilderPro2 extends JFrame {
             ArrayList<String> toppings = new ArrayList<>();
             for (JCheckBox cb : checks)
                 if (cb.isSelected()) toppings.add(cb.getText());
+            
+            ArrayList<String> drinks = new ArrayList<>(); 
+            for(JCheckBox cb : drinkChecks) if(cb.isSelected()) drinks.add(cb.getText());
 
             String date = yearBox.getSelectedItem() + "-" +
                           monthBox.getSelectedItem() + "-" +
@@ -632,6 +675,7 @@ public class PizzaBuilderPro2 extends JFrame {
                 editing.setSize((String) sizeBox.getSelectedItem());
                 editing.setCrust((String) crustBox.getSelectedItem());
                 editing.setToppings(toppings);
+                editing.setDrinks(drinks);
                 editing.setQuantity((int) qtySpinner.getValue());
                 editing.setDate(date);
                 JOptionPane.showMessageDialog(this,
@@ -641,6 +685,7 @@ public class PizzaBuilderPro2 extends JFrame {
                     (String) sizeBox.getSelectedItem(),
                     (String) crustBox.getSelectedItem(),
                     toppings,
+                    drinks,
                     (int) qtySpinner.getValue(),
                     orderId,
                     date
@@ -685,6 +730,7 @@ public class PizzaBuilderPro2 extends JFrame {
             "\nCrust: " + p.getCrust() +
             "\nDate: " + p.getDate() +
             "\nToppings: " + String.join(", ", p.getToppings()) +
+            "\nDrinks: " + (p.getDrinks().isEmpty() ? "None" : String.join(", ", p.getDrinks())) +
             "\nQuantity: " + p.getQuantity() +
             "\nTotal: $" + String.format("%.2f", p.calculatePrice())
         );
@@ -705,6 +751,15 @@ public class PizzaBuilderPro2 extends JFrame {
             sb.append("Toppings (").append(p.getToppings().size()).append("): ")
               .append(String.join(", ", p.getToppings()))
               .append("\n");
+            
+            sb.append("Drinks: "); 
+            
+            if(p.getDrinks().isEmpty())
+                sb.append("None");
+            else 
+                sb.append (String.join(", ", p.getDrinks()));
+            
+            sb.append("\n");
 
             sb.append("Quantity: ").append(p.getQuantity()).append("\n");
 
