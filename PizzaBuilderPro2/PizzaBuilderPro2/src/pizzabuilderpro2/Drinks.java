@@ -6,13 +6,12 @@ package pizzabuilderpro2;
 
 public class Drinks {
     
-    private String name; 
-    private double price; 
-    
+    private String name;
+    private double price;
     
     public Drinks(String name, double price)
     {
-        this.name = name; 
+        this.name = name;
         this.price = price;
     }
     
@@ -21,8 +20,8 @@ public class Drinks {
         return name;
     }
     
-    public double getPrice() { 
-        return price; 
+    public double getPrice() {
+        return price;
     }
     
     // Setters 
@@ -31,11 +30,10 @@ public class Drinks {
        this.name = name; 
    }
    
-   public void setPrice(double price)
-   {
-       this.price = price; 
+   public void setPrice(double price) {
+       this.price = price;
    }
-   
+
    @Override 
    public String toString()
    {

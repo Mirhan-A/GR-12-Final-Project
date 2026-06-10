@@ -44,15 +44,27 @@ class Pizza {
         if (crust.equals("Deep Dish")) price += 2;
 
         price += toppings.size() * 1.5;
-        price += drinks.size() * 2.00; 
+        
+        for(Drinks d: drinks)
+        {
+            price += d.getPrice();
+        }
 
         return price * quantity;
     }
 
     // Convert to file format
     public String toFileString() {
+        StringBuilder drinkData = new StringBuilder(); 
+        
+        for(Drinks d : drinks) {
+            if(drinkData.length() > 0)
+                drinkData.append("|"); 
+            drinkData.append(d.getName());
+        }
+        
         return size + "," + crust + "," + quantity + "," +
-                String.join("|", toppings);
+                String.join("|", toppings) + "," + drinkData;
     }
 
     @Override
@@ -61,6 +73,7 @@ class Pizza {
                ", Crust: " + crust +
                ", Qty: " + quantity +
                ", Toppings: " + toppings +
+               ", Drinks: " + drinks +
                ", Price: $" + String.format("%.2f", calculatePrice());
     }
 }
@@ -157,8 +170,16 @@ class OrderManager {
                     tops.add(t);
                 }
             }
+            
+            java.util.ArrayList<Drinks> drinks = new java.util.ArrayList<>(); 
+            
+            if(parts.length > 4 && !parts[4].isEmpty()) {
+                for (String d : parts[4].split("\\|")) {
+                    drinks.add(new Drinks(d, 2.00));
+                }
+            }
 
-            orders.add(new CustomPizza(size, crust, tops, qty));
+            orders.add(new CustomPizza(size, crust, tops, drinks, qty));
         }
         br.close();
     }
